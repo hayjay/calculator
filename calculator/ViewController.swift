@@ -95,6 +95,5 @@ class ViewController: UIViewController {
 
         inputValue(value: value)
     }
-    
 }
 
