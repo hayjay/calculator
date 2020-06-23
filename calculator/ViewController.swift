@@ -15,6 +15,8 @@ class ViewController: UIViewController {
     var tempValue: String = "0"
     var listOfValues: [String] = []
     var op: String = ""
+    var signedUnsigned = ""
+    var override = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +59,17 @@ class ViewController: UIViewController {
                 result = first / second
             case "%":
                 result = first / 100.0
+            case "+/-":
+                // add negative sign to screen
+                // keep a reference to our sign
+                // save to the signed_unsigned variable
+                // check if the variable (signed_unsigned) is plus if it is, change to minus - TOGGLE
+                // check if the variable (signed_unsigned) is minus if it is, change to plus - TOGGLE
+                // input number, check if the signed_unsigned var is negative
+                // if it is negative then save the negative value of the insterted number into the array
+                // delete sign from the var
+            break
+//                render("-")
             default:
                 break
         }
@@ -69,33 +82,48 @@ class ViewController: UIViewController {
         op = ""
         listOfValues = []
         render(tempValue)
+        signedUnsigned = ""
     }
     
     @IBAction func operatorButtonClick(_ sender: UIButton) {
         listOfValues.append(tempValue)
+        print(listOfValues)
 
-        if listOfValues.count == 2 {
-            let a = Double(listOfValues.remove(at: 0))!
-            let b = Double(listOfValues.remove(at: 0))!
-            
-            let result = String(evaluateExpression(first: a, second: b, opSymbol: op))
-            listOfValues.insert(result, at: 0)
-            inputValue(value: result, override: true)
-        }
+//        if listOfValues.count == 2 {
+//            let a = Double(listOfValues.remove(at: 0))!
+//            let b = Double(listOfValues.remove(at: 0))!
+//            print(a, b)
+//
+////            let result = String(evaluateExpression(first: a, second: b, opSymbol: op))
+////            listOfValues.insert(result, at: 0)
+////            inputValue(value: result, override: true)
+//        }
 
         tempValue = "0"
         op = sender.titleLabel?.text ?? ""
     }
     
     @IBAction func onInputEntry(_ sender: UIButton) {
-        let value = sender.titleLabel?.text ?? ""
-        let isDecimalPresent = tempValue.firstIndex(of: ".") != nil
+        var value = sender.titleLabel?.text ?? ""
         
-        if value == "." && isDecimalPresent {
-            return
+        if value == "+/-" {
+            signedUnsigned = signedUnsigned == "" || signedUnsigned == "+" ? "-" : "+"
+            override = true
+            print(signedUnsigned)
+        } else {
+            let isDecimalPresent = tempValue.firstIndex(of: ".") != nil
+            if value == "." && isDecimalPresent {
+                return
+            }
+            
+            if signedUnsigned == "-" {
+                value = "-\(value)"
+            }
+            inputValue(value: value, override: override)
+            override = false
+            print(value)
+            signedUnsigned = ""
         }
-
-        inputValue(value: value)
     }
     
 }
